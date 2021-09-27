@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask whatIsGround;
 
+    [SerializeField]
+    private GameObject _particle;
+
     public bool isGrounded;
     private bool canJump;
 
@@ -44,7 +47,13 @@ public class PlayerController : MonoBehaviour
         {
             rb2D.velocity = new Vector2(rb2D.velocity.x, 0);
             rb2D.AddForce(transform.up * 6.2f, ForceMode2D.Impulse);
+            _particle.SetActive(true);
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D c)
+    {
+        _particle.SetActive(false);
     }
 
     private void Movement()
