@@ -37,11 +37,30 @@ public class AIPlayerDetector : MonoBehaviour
         }
     }
 
+    [Header("props")]
+    [SerializeField]
+    private float speed = 2.2f;
+    [SerializeField]
+    private GameObject enemy;
+    [SerializeField]
+    private Transform mainPos;
+    private Transform player;
+    bool followPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(DetectionCoroutine());
+
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    private void Update()
+    {
+        if (followPlayer == true)
+            enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, player.position, speed * Time.deltaTime);
+        else
+            BackToOriginPos();
     }
 
     private void OnDrawGizmos()
@@ -68,10 +87,20 @@ public class AIPlayerDetector : MonoBehaviour
         if(collider != null)
         {
             Target = collider.gameObject;
+            followPlayer = true;
+
         }
         else
         {
             Target = null;
+            followPlayer = false;
+            BackToOriginPos();
         }
+    }
+
+    void BackToOriginPos()
+    {
+        enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, mainPos.position, speed * Time.deltaTime);
+
     }
 }
